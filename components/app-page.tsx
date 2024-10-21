@@ -154,7 +154,6 @@ export function AppPage() {
         toast({
           title: "エラー",
           description: "文字起こしされたテキストが存在しません。",
-          variant: "destructive",
         });
         setIsProcessing(false);
         return;
@@ -182,7 +181,6 @@ export function AppPage() {
       toast({
         title: "エラー",
         description: "要約生成中にエラーが発生しました。",
-        variant: "destructive",
       });
     } finally {
       setIsProcessing(false);
@@ -215,7 +213,6 @@ export function AppPage() {
       toast({
         title: "エラー",
         description: "議事録生成中にエラーが発生しました。",
-        variant: "destructive",
       });
     } finally {
       setIsProcessing(false);

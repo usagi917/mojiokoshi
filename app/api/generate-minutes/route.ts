@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unexpected response from OpenAI API' }, { status: 500 });
     }
   } catch (error: unknown) {
-    console.error('Minutes generation error:', error.message);
+    console.error('Minutes generation error:', error);
     console.error('Full error:', JSON.stringify(error, null, 2));
     return NextResponse.json({ error: 'Minutes generation failed' }, { status: 500 });
   }

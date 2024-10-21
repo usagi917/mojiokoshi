@@ -57,8 +57,8 @@ export async function POST(request: Request) {
       console.error('Unexpected response format:', completion);
       return NextResponse.json({ error: 'Unexpected response from OpenAI API' }, { status: 500 });
     }
-  } catch (error: any) {
-    console.error('Summary generation error:', error.message);
+  } catch (error: unknown) {
+    console.error('Summary generation error:', error,);
     return NextResponse.json({ error: 'Summary generation failed' }, { status: 500 });
   }
 }
