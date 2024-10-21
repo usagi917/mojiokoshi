@@ -3,24 +3,27 @@ import OpenAI from 'openai';
 
 export async function POST(request: Request) {
   const formData = await request.formData();
-  const audio = formData.get('audio') as File;
-  const apiKey = formData.get('apiKey') as string;
+  const audio = formData.get('audio');
+  const apiKey = formData.get('apiKey');
 
-  if (!apiKey) {
-    return NextResponse.json({ error: 'API key is required' }, { status: 1000 });
+  // 入力データの検証
+  if (!apiKey || !(audio instanceof File) || !audio.size) {
+    return NextResponse.json({ error: 'API key and valid audio file are required' }, { status: 400 });
   }
-
-  const openai = new OpenAI({ apiKey });
+  const openai = new OpenAI({ apiKey: apiKey as string });
 
   try {
+    // ファイルをストリーム形式で送信
+    const arrayBuffer = await audio.arrayBuffer();
+    const fileStream = new File([arrayBuffer], 'audio.wav'); // Fileを作成してfileStreamに代入
     const transcription = await openai.audio.transcriptions.create({
-      file: audio,
+      file: fileStream,
       model: 'whisper-1',
     });
 
     return NextResponse.json({ transcript: transcription.text });
   } catch (error) {
     console.error('Transcription error:', error);
-    return NextResponse.json({ error: 'Transcription failed' }, { status: 1500 });
+    return NextResponse.json({ error: 'Transcription failed' }, { status: 500 });
   }
 }
