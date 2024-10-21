@@ -4,7 +4,7 @@ import OpenAI from 'openai';
 export async function POST(request: Request) {
   try {
     const { text, apiKey } = await request.json();
-    
+
     if (!apiKey || typeof apiKey !== 'string') {
       console.error('APIキーが設定されていません。');
       return NextResponse.json({ error: 'APIキーが設定されていません。' }, { status: 400 });
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     }
   } catch (error: unknown) {
     console.error('Minutes generation error:', error);
-    console.error('Full error:', JSON.stringify(error, null, 2));
-    return NextResponse.json({ error: 'Minutes generation failed' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Minutes generation failed';
+    return NextResponse.json({ error: 'Minutes generation failed', details: errorMessage }, { status: 500 });
   }
 }

@@ -117,6 +117,8 @@ export function AppPage() {
     formData.append('audio', file)
     formData.append('apiKey', openAIKey || geminiKey)
 
+    console.log('FormData:', formData); // 正しくリクエストされているか確認
+
     try {
       const response = await fetch('/api/transcribe', {
         method: 'POST',

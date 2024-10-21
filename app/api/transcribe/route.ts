@@ -10,20 +10,22 @@ export async function POST(request: Request) {
   if (!apiKey || !(audio instanceof File) || !audio.size) {
     return NextResponse.json({ error: 'API key and valid audio file are required' }, { status: 400 });
   }
+
   const openai = new OpenAI({ apiKey: apiKey as string });
 
   try {
     // ファイルをストリーム形式で送信
     const arrayBuffer = await audio.arrayBuffer();
-    const fileStream = new File([arrayBuffer], 'audio.wav'); // Fileを作成してfileStreamに代入
+    const fileStream = new File([arrayBuffer], 'audio.wav');
     const transcription = await openai.audio.transcriptions.create({
       file: fileStream,
       model: 'whisper-1',
     });
 
     return NextResponse.json({ transcript: transcription.text });
-  } catch (error) {
+  } catch (error: unknown) {
     console.error('Transcription error:', error);
-    return NextResponse.json({ error: 'Transcription failed' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Transcription failed';
+    return NextResponse.json({ error: 'Transcription failed', details: errorMessage }, { status: 500 });
   }
 }

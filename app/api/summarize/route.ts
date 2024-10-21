@@ -58,7 +58,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unexpected response from OpenAI API' }, { status: 500 });
     }
   } catch (error: unknown) {
-    console.error('Summary generation error:', error,);
-    return NextResponse.json({ error: 'Summary generation failed' }, { status: 500 });
+    console.error('Summary generation error:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Summary generation failed';
+    return NextResponse.json({ error: 'Summary generation failed', details: errorMessage }, { status: 500 });
   }
 }
