@@ -114,10 +114,8 @@ export function AppPage() {
     setIsProcessing(true)
     setProgress(0)
     const formData = new FormData()
-    formData.append('audio', file)
+    formData.append('audio', file, file.name)  // ファイル名を含める
     formData.append('apiKey', openAIKey || geminiKey)
-
-    console.log('FormData:', formData); // 正しくリクエストされているか確認
 
     try {
       const response = await fetch('/api/transcribe', {
@@ -134,13 +132,14 @@ export function AppPage() {
           description: "音声の文字起こしが正常に完了しました。",
         })
       } else {
-        throw new Error('文字起こしエラー')
+        const errorData = await response.json()
+        throw new Error(errorData.error || '文字起こしエラー')
       }
     } catch (error) {
       console.error('エラー:', error)
       toast({
         title: "エラー",
-        description: "文字起こし処理中にエラーが発生しました。",
+        description: error instanceof Error ? error.message : "文字起こし処理中にエラーが発生しました。",
       })
     } finally {
       setIsProcessing(false)
@@ -394,3 +393,5 @@ function toast({ title, description }: { title: string; description: string }) {
   // トースト通知の実装をここに追加する
   console.log(`タイトル: ${title}, 説明: ${description}`);
 }
+
+
