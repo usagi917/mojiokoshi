@@ -388,10 +388,10 @@ export function AppPage() {
     </div>
   )
 }
-
 function toast({ title, description }: { title: string; description: string }) {
   // トースト通知の実装をここに追加する
   console.log(`タイトル: ${title}, 説明: ${description}`);
 }
+
 
 
